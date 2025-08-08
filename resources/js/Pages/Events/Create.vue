@@ -6,11 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { CalendarIcon } from 'lucide-vue-next';
 import { format } from 'date-fns';
-import { cn } from '~/lib/utils';
 import { ref, watch, onMounted } from 'vue';
 
 const form = useForm({
@@ -24,17 +20,20 @@ const form = useForm({
 });
 
 const submit = () => {
-    form.post(route('events.store'));
+    form.post(route('events.store'), {
+        forceFormData: true,
+    });
 };
 
-const date = ref(form.date ? new Date(form.date) : undefined);
-const popoverOpen = ref(false); // State untuk mengontrol popover
+// Tidak perlu ref date dan popoverOpen lagi jika menggunakan input type="date"
+// const date = ref(form.date ? new Date(form.date) : undefined);
+// const popoverOpen = ref(false);
 
-watch(date, (newDate) => {
-  console.log('Date changed:', newDate);
-  form.set('date', newDate ? format(newDate, 'yyyy-MM-dd') : ''); // Perubahan di sini
-  popoverOpen.value = false; // Tutup popover setelah tanggal dipilih
-});
+// watch(date, (newDate) => {
+//   console.log('Date changed:', newDate);
+//   form.set('date', newDate ? format(newDate, 'yyyy-MM-dd') : '');
+//   popoverOpen.value = false;
+// });
 
 </script>
 
@@ -62,23 +61,7 @@ watch(date, (newDate) => {
 
                             <div>
                                 <Label for="date">Date</Label>
-                                <Popover v-model:open="popoverOpen"> <!-- Bind popoverOpen di sini -->
-                                    <PopoverTrigger as-child>
-                                        <Button
-                                            variant="outline"
-                                            :class="cn(
-                                                'w-full justify-start text-left font-normal',
-                                                !date && 'text-muted-foreground',
-                                            )"
-                                        >
-                                            <CalendarIcon class="mr-2 h-4 w-4" />
-                                            {{ date ? format(date, 'PPP') : 'Pick a date' }}
-                                        </Button>
-                                    </PopoverTrigger>
-                                    <PopoverContent class="w-auto p-0">
-                                        <Calendar v-model:selected="date" initial-focus />
-                                    </PopoverContent>
-                                </Popover>
+                                <Input id="date" type="date" v-model="form.date" required class="mt-1 block w-full" />
                                 <div v-if="form.errors.date" class="text-red-500 text-sm mt-1">{{ form.errors.date }}</div>
                             </div>
 

@@ -76,7 +76,7 @@ const deleteEvent = async (id) => {
                                     <TableCell>{{ event.is_paid ? 'Yes' : 'No' }}</TableCell>
                                     <TableCell>{{ event.eo }}</TableCell>
                                     <TableCell>
-                                        <img :src="event.poster" alt="Poster" class="w-16 h-16 object-cover rounded" />
+                                        <img :src="event.poster" :alt="event.name" class="w-16 h-16 object-cover rounded" />
                                     </TableCell>
                                     <TableCell>
                                         <div class="flex items-center space-x-2">

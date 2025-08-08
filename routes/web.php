@@ -15,6 +15,18 @@ Route::get('/', function () {
     ]);
 })->name('welcome');
 
+Route::get('/events-for-visitors', function () {
+    return Inertia::render('PublicEvents', [
+        'events' => \App\Models\Event::all(),
+    ]);
+})->name('public.events');
+
+Route::get('/events/{event}', function (\App\Models\Event $event) {
+    return Inertia::render('EventDetail', [
+        'event' => $event,
+    ]);
+})->name('event.detail');
+
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');

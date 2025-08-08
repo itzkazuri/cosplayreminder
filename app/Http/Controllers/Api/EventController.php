@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Event;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Storage;
 
 class EventController extends Controller
 {
@@ -29,17 +30,22 @@ class EventController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'date' => 'required|date',
             'location' => 'required|string|max:255',
             'is_paid' => 'boolean',
             'eo' => 'required|string|max:255',
             'ticket_link' => 'nullable|url',
-            'poster' => 'required|string', // Akan diubah untuk upload file
+            'poster' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        Event::create($request->all());
+        if ($request->hasFile('poster')) {
+            $path = $request->file('poster')->store('uploads', 'public');
+            $validatedData['poster'] = '/storage/' . $path;
+        }
+
+        Event::create($validatedData);
 
         return redirect()->route('events.index')->with('success', 'Event created successfully.');
     }
@@ -53,23 +59,39 @@ class EventController extends Controller
 
     public function update(Request $request, Event $event)
     {
-        $request->validate([
+        $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'date' => 'required|date',
             'location' => 'required|string|max:255',
             'is_paid' => 'boolean',
             'eo' => 'required|string|max:255',
             'ticket_link' => 'nullable|url',
-            'poster' => 'required|string', // Akan diubah untuk upload file
+            'poster' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        $event->update($request->all());
+        if ($request->hasFile('poster')) {
+            // Hapus poster lama jika ada
+            if ($event->poster && Storage::disk('public')->exists(str_replace('/storage/', '', $event->poster))) {
+                Storage::disk('public')->delete(str_replace('/storage/', '', $event->poster));
+            }
+            $path = $request->file('poster')->store('uploads', 'public');
+            $validatedData['poster'] = '/storage/' . $path;
+        } else {
+            // Jika tidak ada poster baru diupload, pertahankan poster yang sudah ada
+            $validatedData['poster'] = $event->poster; 
+        }
+
+        $event->update($validatedData);
 
         return redirect()->route('events.index')->with('success', 'Event updated successfully.');
     }
 
     public function destroy(Event $event)
     {
+        // Hapus poster saat event dihapus
+        if ($event->poster && Storage::disk('public')->exists(str_replace('/storage/', '', $event->poster))) {
+            Storage::disk('public')->delete(str_replace('/storage/', '', $event->poster));
+        }
         $event->delete();
 
         return redirect()->route('events.index')->with('success', 'Event deleted successfully.');

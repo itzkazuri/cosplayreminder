@@ -4,11 +4,13 @@ import { Link, usePage } from '@inertiajs/vue3';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Menu, UserCircle } from 'lucide-vue-next';
+import { Menu, UserCircle, Sun, Moon } from 'lucide-vue-next';
+import { useDarkMode } from '@/Composables/useDarkMode';
 
 const showingNavigationDropdown = ref(false);
 const { props } = usePage();
 const user = props.auth.user;
+const { isDarkMode, toggleDarkMode } = useDarkMode();
 </script>
 
 <template>
@@ -37,6 +39,12 @@ const user = props.auth.user;
                                 Manage Events
                             </Button>
                         </Link>
+
+                        <!-- Dark Mode Toggle -->
+                        <Button variant="ghost" size="icon" @click="toggleDarkMode">
+                            <Sun v-if="isDarkMode" class="h-6 w-6 text-yellow-500" />
+                            <Moon v-else class="h-6 w-6 text-gray-500" />
+                        </Button>
 
                         <!-- User Dropdown -->
                         <DropdownMenu>
@@ -89,6 +97,14 @@ const user = props.auth.user;
                                             Manage Events
                                         </Button>
                                     </Link>
+
+                                    <!-- Dark Mode Toggle for Mobile -->
+                                    <Button variant="ghost" class="w-full justify-start text-lg" @click="toggleDarkMode">
+                                        <Sun v-if="isDarkMode" class="mr-2 h-6 w-6 text-yellow-500" />
+                                        <Moon v-else class="mr-2 h-6 w-6 text-gray-500" />
+                                        {{ isDarkMode ? 'Light Mode' : 'Dark Mode' }}
+                                    </Button>
+
                                     <DropdownMenu>
                                         <DropdownMenuTrigger as-child>
                                             <Button variant="ghost" class="w-full justify-start text-lg">
@@ -125,9 +141,9 @@ const user = props.auth.user;
                 </nav>
 
                 <!-- Page Content -->
-            <main>
-                <slot />
-            </main>
+                <main>
+                    <slot />
+                </main>
             </div>
         </div>
     </template>

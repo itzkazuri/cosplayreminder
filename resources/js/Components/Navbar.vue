@@ -2,10 +2,12 @@
 import { Link, usePage } from '@inertiajs/vue3';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu } from 'lucide-vue-next';
+import { Menu, Sun, Moon } from 'lucide-vue-next';
+import { useDarkMode } from '@/Composables/useDarkMode';
 
 const { props } = usePage();
 const user = props.auth.user;
+const { isDarkMode, toggleDarkMode } = useDarkMode();
 </script>
 
 <template>
@@ -27,7 +29,7 @@ const user = props.auth.user;
             Home
           </Button>
         </Link>
-        <Link :href="route('events.index')">
+        <Link :href="route('public.events')">
           <Button variant="ghost" class="text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400">
             Events
           </Button>
@@ -37,6 +39,12 @@ const user = props.auth.user;
             Dashboard
           </Button>
         </Link>
+
+        <!-- Dark Mode Toggle -->
+        <Button variant="ghost" size="icon" @click="toggleDarkMode">
+          <Sun v-if="isDarkMode" class="h-6 w-6 text-yellow-500" />
+          <Moon v-else class="h-6 w-6 text-gray-500" />
+        </Button>
       </div>
 
       <!-- Mobile Navigation (Sheet) -->
@@ -54,7 +62,7 @@ const user = props.auth.user;
                   Home
                 </Button>
               </Link>
-              <Link :href="route('events.index')">
+              <Link :href="route('public.events')">
                 <Button variant="ghost" class="w-full justify-start text-lg">
                   Events
                 </Button>
@@ -64,6 +72,13 @@ const user = props.auth.user;
                   Dashboard
                 </Button>
               </Link>
+
+              <!-- Dark Mode Toggle for Mobile -->
+              <Button variant="ghost" class="w-full justify-start text-lg" @click="toggleDarkMode">
+                <Sun v-if="isDarkMode" class="mr-2 h-6 w-6 text-yellow-500" />
+                <Moon v-else class="mr-2 h-6 w-6 text-gray-500" />
+                {{ isDarkMode ? 'Light Mode' : 'Dark Mode' }}
+              </Button>
             </nav>
           </SheetContent>
         </Sheet>

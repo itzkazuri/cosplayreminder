@@ -1,22 +1,22 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
+  <div class="min-h-screen bg-background">
     <!-- Navbar Component -->
     <Navbar />
     
     <!-- Hero Section -->
     <section class="py-20 px-4 text-center">
       <div class="max-w-4xl mx-auto">
-        <h1 class="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
+        <h1 class="text-5xl md:text-6xl font-bold text-foreground mb-6">
           <span class="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
             Cosplay Reminder
           </span>
         </h1>
-        <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+        <p class="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
           Jangan sampai terlewat event cosplay impianmu! Dapatkan reminder untuk semua event cosplay terbaru di Indonesia.
         </p>
-        <Button size="lg" class="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-3">
+        <Button size="lg" class="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-3" @click="$inertia.visit(route('public.events'))">
           <Calendar class="mr-2 h-5 w-5" />
-          Lihat Event Terbaru
+          Lihat Semua Event
         </Button>
       </div>
     </section>
@@ -25,8 +25,8 @@
     <section class="py-16 px-4">
       <div class="max-w-7xl mx-auto">
         <div class="text-center mb-12">
-          <h2 class="text-3xl font-bold text-gray-900 mb-4">Event Cosplay Terbaru</h2>
-          <p class="text-gray-600 max-w-2xl mx-auto">
+          <h2 class="text-3xl font-bold text-foreground mb-4">Event Cosplay Terbaru</h2>
+          <p class="text-muted-foreground max-w-2xl mx-auto">
             Temukan event cosplay terbaik di seluruh Indonesia dengan berbagai tema menarik
           </p>
         </div>
@@ -49,7 +49,7 @@
             </div>
             <CardHeader>
               <CardTitle class="text-lg">{{ event.name }}</CardTitle>
-              <div class="flex items-center text-sm text-gray-600 space-y-1">
+              <div class="flex items-center text-sm text-muted-foreground space-y-1">
                 <div class="flex items-center">
                   <Calendar class="mr-2 h-4 w-4" />
                   <span>{{ formatDate(event.date) }}</span>
@@ -62,7 +62,7 @@
             </CardHeader>
             <CardContent>
               <div class="flex items-center justify-between">
-                <div class="flex items-center text-sm text-gray-600">
+                <div class="flex items-center text-sm text-muted-foreground">
                   <Users class="mr-2 h-4 w-4" />
                   <span>{{ event.eo }}</span>
                 </div>
@@ -75,9 +75,11 @@
                   <Ticket class="mr-2 h-4 w-4" />
                   Beli Tiket
                 </Button>
-                <Button v-else variant="outline" size="sm">
-                  Detail
-                </Button>
+                <Link :href="route('event.detail', event.id)">
+                  <Button variant="outline" size="sm">
+                    Detail
+                  </Button>
+                </Link>
               </div>
             </CardContent>
           </Card>
@@ -96,7 +98,7 @@
     <section class="py-16 px-4 bg-white">
       <div class="max-w-6xl mx-auto">
         <div class="text-center mb-12">
-          <h2 class="text-3xl font-bold text-gray-900 mb-4">Kenapa Pilih Cosplay Reminder?</h2>
+          <h2 class="text-3xl font-bold text-foreground mb-4">Kenapa Pilih Cosplay Reminder?</h2>
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -105,7 +107,7 @@
               <Bell class="h-8 w-8 text-purple-600" />
             </div>
             <h3 class="text-xl font-semibold mb-2">Reminder Otomatis</h3>
-            <p class="text-gray-600">Dapatkan notifikasi sebelum event dimulai agar tidak terlewat</p>
+            <p class="text-muted-foreground">Dapatkan notifikasi sebelum event dimulai agar tidak terlewat</p>
           </Card>
           
           <Card class="text-center p-6 border-none shadow-md hover:shadow-lg transition-shadow">
@@ -113,7 +115,7 @@
               <MapPin class="h-8 w-8 text-pink-600" />
             </div>
             <h3 class="text-xl font-semibold mb-2">Lokasi Lengkap</h3>
-            <p class="text-gray-600">Informasi lokasi event yang akurat dan mudah diakses</p>
+            <p class="text-muted-foreground">Informasi lokasi event yang akurat dan mudah diakses</p>
           </Card>
           
           <Card class="text-center p-6 border-none shadow-md hover:shadow-lg transition-shadow">
@@ -121,7 +123,7 @@
               <Star class="h-8 w-8 text-blue-600" />
             </div>
             <h3 class="text-xl font-semibold mb-2">Event Terpilih</h3>
-            <p class="text-gray-600">Hanya event cosplay terbaik dan terpercaya yang kami tampilkan</p>
+            <p class="text-muted-foreground">Hanya event cosplay terbaik dan terpercaya yang kami tampilkan</p>
           </Card>
         </div>
       </div>
@@ -137,7 +139,7 @@
           Jangan sampai terlewat event cosplay impianmu. Bergabunglah dengan ribuan cosplayer lainnya!
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button size="lg" variant="secondary" class="bg-white text-purple-600 hover:bg-gray-50">
+          <Button size="lg" variant="secondary" class="bg-white text-purple-600 hover:bg-gray-50" @click="$inertia.visit(route('public.events'))">
             <Calendar class="mr-2 h-5 w-5" />
             Lihat Semua Event
           </Button>
